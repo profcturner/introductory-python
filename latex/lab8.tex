@@ -1,0 +1,242 @@
+%
+% Introductrory Software Development - Laboratory 8
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 8},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE203}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{8}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\xkcd}[2]{
+	\begin{center}
+	\includegraphics[scale = 0.5]{../../Figures/png/#1}
+	\newline
+	\url{http://xkcd.com/#2}
+	\end{center}
+	\bigskip
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 8 - Error Handling
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to understand how to catch exceptions in code;
+\item to be able to write more error tolerant programs;
+\item to practice writing scripts to given specifications.
+\end{itemize}
+
+In programming we sometimes encounter \emph{syntax errors} that cause problems when the program is compiled or interpreted. We also encounter \emph{logical errors} where the program unexpected does not perform as expected. In this lab we are mainly exploring how to anticipate certain errors and deal with their outcome.
+
+\section{Try}
+
+\alert{Start a NEW file}
+Proposed name: lab8\_1.py
+\begin{lstlisting}
+# Writing a file
+# Learning to catch errors
+
+def fetch_number(text='Enter a number: '):
+    number = int(input(text))
+    return number
+
+def main():
+    number = fetch_number()
+    print('Your number was {}'.format(number))
+
+if __name__ == '__main__':
+    main()
+\end{lstlisting}
+
+Once you have written the script, try running it, first by entering a number, and the second time by entering a word. On the second occaision you will receive a \emph{Traceback} which demonstrates than an error occured on a given line within the script. In this case you will that it was an \lstinline!ValueError!.
+
+This causes our rather simple and intolerant script to completely quit, because exceptions will do this if not caught. To prevent this we use a \lstinline!try! ... \lstinline!except! syntax. Change the \lstinline!fetch_number! script as follows.
+
+\begin{lstlisting}
+def fetch_number(text='Enter a number: '):
+    try:
+        number = int(input(text))
+        return number
+    except ValueError:
+        print('That was not an integer.');
+\end{lstlisting}
+
+Please experiment with this script again. You will now see that it doesn't quit when the wrong value is entered. Nevertheless, it will main the \lstinline!main()! function doesn't behave quite as expected because the function just gives up when something that isn't an integer is entered.
+
+\subsection{Improving the script}
+
+Please alter the function again to have it repeatedly ask for a number until it is successful. Test your effort. Please add appropriate docstrings and comments.
+
+\subsection{Other Errors}
+
+Change \lstinline!main()! in this script as follows.
+
+\begin{lstlisting}
+def main():
+    numerator = fetch_number()
+    denominator = fetch_number()
+
+    division = numerator / denominator
+
+    print('Thanks, {} / {} is {}'.format(
+        numerator, denominator, division))
+\end{lstlisting}
+
+Run the script. See if you can break it and make it fall over. Hint, what are you not allowed to divide by? Can you alter the script so it behaves well in this situation? You will want to carefully note the type of error in the Traceback.
+
+\section{Ignoring Errors}
+
+If you \emph{really} want to suppress an error from causing a traceback and you are confident your program later won't fall over you can use code as follows:
+
+
+\begin{lstlisting}
+# Pseudo code, don't type it in!
+try:
+    ...    
+    ...
+except(ValueError, NameError):
+    pass
+\end{lstlisting}
+
+Filling in whatever exceptions you wish to ignore, \lstinline!pass! is a sort of null Python statement, equivalent to empty braces. It is used to say that Python should ignore these exceptions. You should obviously be very careful with this.
+
+\section{else and finally}
+
+You can add as many \lstinline!except! clauses after a \lstinline!try! as needed, to handle various exceptions, and it makes more sense to handle many exceptions separately. You can also add two other clauses.
+
+\begin{lstlisting}
+# Pseudo code, don't type it in!
+try:
+    ...    
+except OneError:
+    # Code to do on OneError exception
+except TwoError:
+    # Code do to on TwoError exception
+else
+    # Code that can be run when no exceptions occured
+finally
+    # Code called whether there was an exception or not
+\end{lstlisting}
+
+%\section{Error details}
+
+
+\section{Error Hierarchy}
+
+Look in the Python documentation at the available Exceptions. \footnote{\url{https://docs.python.org/3/library/exceptions.html}}. If you look for the exception hierarchy you will note that some exceptions are within others. For instance \lstinline!ArithmeticError! catches more errors than just division by zero, so you will want to be strategic and careful about how level your catching of the exception is.
+
+\section{Task}
+
+\alert{Start a NEW file}
+Write a Python Script with proposed name: lab8\_2.py, it should:
+
+\begin{itemize}
+\item Ask the end user to enter any number of floating point numbers they wish;
+\item Calculate the mean of those numbers;
+\item Handle relevant exceptions appropriately, including checking for valid floats and division by zero.
+\end{itemize}
+
+Use functions as appropriate, have a \lstinline!main()! function that is called correctly, and add docstrings and comments.
+
+You mean wish to know or recall that for numbers
+\[
+x_1, x_2, x_3, \ldots, x_n
+\]
+the mean of these numbers is given by
+\[
+\overline{x}= \frac{\Sigma x_i}{n}
+\]
+which means adding all the numbers up and dividing by the number of numbers.
+
+
+
+\section{Extra Credit}
+
+As an extra, if you find that easy, work out the standard deviation, which is given by
+\[
+s = \sqrt{\frac{1}{n}\Sigma x_i^2 - \overline{x}^2}
+\]
+
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\end{document}
+
+
+

@@ -1,0 +1,169 @@
+%
+% Introductrory Software Development - Laboratory 21
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 17},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE203}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{17}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\xkcd}[2]{
+	\begin{center}
+	\includegraphics[scale = 0.5]{../../Figures/png/#1}
+	\newline
+	\url{http://xkcd.com/#2}
+	\end{center}
+	\bigskip
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 17 - Numerical Exercises
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to consolidate algorithm construction;
+\item to consolidate working with control structures.
+\end{itemize}
+
+\section{Divisors}
+
+\alert{Start a NEW file}
+Proposed name: lab17\_1.py
+Write a python script with a function called \lstinline!divisors()! which will return, for a positive integer, all the integer divisors (those numbers that divide into the original number with no remainder). The returned value should be in list form.
+
+The function should check the input for validity (that it is indeed a positive integer, and return an empty list if not).
+
+\section{Prime Numbers}
+
+Add a function called \lstinline!prime_numbers()! that takes a positive integer as an argument and returns a list of all the prime numbers up to and including that number.
+
+Remember, a prime number has exactly two divisors, itself and one.
+
+\section{Prime Factors}
+
+Add a function called \lstinline!prime_factors()! that works like \lstinline!divisors()! except that only prime number factors are returned.
+
+\section{Pythagorean Triples}
+
+A \emph{Pythagorean Triple} is a set of three positive integers $a$, $b$ and $c$ such that
+\[
+a^2 + b^2 = c^2
+\]
+
+There are infinitely many such triples.
+
+\subsection{Checking A Triple}
+
+Write a function called \lstinline!check_pythagorean_triple()! that takes three positive integer variables and checks if they are a Pythagorean Triple.
+
+\subsection{Generating Triples}
+
+Can you create a function \lstinline!generate_pythagorean_triples()! that will print out a certain number of triples for an input $n$?
+
+Can you adjust it to print the triples in some sort of order?
+
+\section{Fibonacci Sequences}
+
+The standard Fibonacci sequence is
+
+\[
+1,1,2,3,5,8,13,21,34, \ldots
+\]
+
+Write a Python function called \lstinline!Fibonacci()! that will output all Fibonacci numbers up to and including a positive integer used as input.
+
+
+\section{Extra Credit}
+
+\begin{itemize}
+\item Ensure all functions are properly documented, commented and appropriately robust.
+
+\item Consider improving the speed of your Prime Number finder by implementing the Sieve of Eratosthenes. \url{https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes}
+
+\item Review previous labs you may not have completed as preparation for the final test.
+\end{itemize}
+
+
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\end{document}
+
+
+

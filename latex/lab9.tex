@@ -1,0 +1,239 @@
+%
+% Introductrory Software Development - Laboratory 9
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 9},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE203}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{9}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\xkcd}[2]{
+	\begin{center}
+	\includegraphics[scale = 0.5]{../../Figures/png/#1}
+	\newline
+	\url{http://xkcd.com/#2}
+	\end{center}
+	\bigskip
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 9 - Debugging with pdb
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to understand the concepts in using a debugging tool;
+\item to be able to usr \lstinline!pdb! in particular to debug a script;
+\item to fix a script with existing errors.
+\end{itemize}
+
+Debugging scripts and programs is an important aspect of software development. This is often accomplished by simple inspection of the code, or the addition of \lstinline!print()! statements that output key variables (and which one must remember to remove later). But most languages provide debugging tools that allow the execution of code to be stepped through, or stopped, and values inspected in these cases. Frequently a number of such tools are available and this is true for Python, but the most canonical tool is \lstinline!pdb!.
+
+\section{Using pdb}
+
+You will likely wish to consult the on-line documentation for \lstinline!pdb!.%
+\footnote{https://docs.python.org/3/library/pdb.html}.
+
+Let's start playing with a script, it is uncommented and undocumented. Can you see what you think it is supposed to do?
+
+\alert{Start a NEW file}
+Proposed name: lab8\_1.py
+\begin{lstlisting}
+# Experiments with pdb
+# Put your name here
+
+def create_word_list(text=""):
+    if len(text):
+        print(text)
+
+    words = []
+
+    for x in range(0, 5):
+        word = input("A word please: ")
+
+    words.append(word)
+    return words
+
+def interleave_lists(list1, list2):
+    final_list = []
+
+    for x in range(0, 5):
+        word1 = list1[x]
+        word2 = list2[x]
+
+        final_list.append(word1)
+        final_list.append(word2)
+        
+    return final_list
+
+def main():
+
+    list1 = create_word_list("First list.")
+    list2 = create_word_list("Second list.")
+
+    final_list = interleave_lists(list1, list2)
+
+    print(final_list)
+
+if __name__ == '__main__':
+    main()
+\end{lstlisting}
+
+If you run this script, you will get an exception. Let's explore what happened. by typing these commands at the IDLE interpreter.
+
+\begin{lstlisting}
+import pdb
+import lab9_1
+lab9_1.main()
+\end{lstlisting}
+
+The exception will happen again. Now type
+
+\begin{lstlisting}
+pdb.pm()
+\end{lstlisting}
+
+This will cause the Python debugger to show you where the exception happened, a post-mortem. It also causes the normal interpreter prompt to be replaced by \lstinline!(Pdb)!. This is still a functional interpreter, but it has all the features of the debugger, and it is in the context of where the bug occurred. For instance. We can explore the variables at the point of the exception. Try typing these at the prompt.
+
+\begin{lstlisting}
+x
+list1
+len(list1)
+list1[x]
+?
+q
+\end{lstlisting}
+
+As you can these allows us to inspect a number of variables and the state they were in when the exception happened and the program terminated. The last two commands show help for the debugger and quit it respectively.
+
+Does this give some hints as to what has gone wrong? So much for post-mortem debugging. Let's go for something more useful. Modify your script to add the following code to the very start of the \lstinline!main()! function.
+
+\begin{lstlisting}
+import pdb; pdb.set_trace()
+\end{lstlisting}
+
+Normally it is not encouraged to place your \lstinline!import! commands within code, but this is a useful exception. When the script is now run, it drops into the debugger at the point of \lstinline!set_trace()!, with some basic information about where you are and what is about to be executed.
+
+Type \lstinline!l! to get some more orientation on where you are. Now type \lstinline!s! to \emph{step into} the code and use \lstinline!n! a few times to step through the code. At any point you can investigate the state of the variables.
+
+Maybe step through the code till you have been prompted for a word or two and then try investigating \lstinline!words! simply by typing it at the debugged prompt. What has gone wrong here?
+
+You can also try using \lstinline!r! at various points.
+
+\subsection{Important pdb commands}
+
+The most important commands are:
+
+\begin{tabular}{lll}
+l & list & show were you are in the code \\
+n & next & execute the next line \\
+s & step & step into a function or block \\
+c & continue & keep going till a breakpoint or exception \\
+r & return & run till the end of the current function \\
+b & break & set a breakpoint \\
+\end{tabular}
+
+You may want to try playing with the \lstinline!b! command, try using \lstinline!help b! at the debugger prompt. As you can see, you can specify a line at which the debugger should halt, or if you prefer a line and a variable condition.
+
+\subsection{Fixing the script}
+
+Use the debugger to help fix the script above. Then comment and document the script, and change it to allow any given number of list size to begin with. If it crashes or misbehaves, use the debugger to investigate.
+
+\section{Command Line}
+
+An optional extra for today's lab.
+
+If you are running the script directly from the command line, then
+
+\begin{lstlisting}
+python3 -m pdb lab9_1.py
+\end{lstlisting}
+
+will run your script within the debugger. If you are using Windows, you may want to use the Run option from the Start menu to run \lstinline!cmd! to get a command line. This is usually easier in other operating systems. You may need to use \lstinline!cd! to change to the directory of the script first.
+
+\section{Extra Credit}
+
+If you had any problems with your script for the first class test, try using the debugger to investigate and fix them. Otherwise either prepare for next week's test or play with the debugger with some other script.
+
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\end{document}
+
+
+

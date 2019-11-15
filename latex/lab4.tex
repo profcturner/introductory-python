@@ -1,0 +1,308 @@
+%
+% Introductrory Software Development - Laboratory 4
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 4},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE203}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{4}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 4 - Modules \& Importing Code
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to understand and implement \lstinline!for! and \lstinline!while! loops;
+\item to understand and implement functions;
+\item to call functions and return values;
+\item to create self contained scripts built on functions.
+\end{itemize}
+
+\section{Modules}
+
+A \emph{module} is a defined in the Python documentation as an ``organisational unit of Python code. Modules have a namespace containing arbitrary Python objects. Modules are loaded into Python by the process of importing.''
+
+This idea of a \emph{namespace} means that normally the items and their names in one module are separate from those in another. A useful analogy may be to think of collections of files in two separate directories.
+
+We have both been using modules (as you may recognise from the menu items in the IDLE environment) and have imported code from one.
+
+The ability to selectively import code from modules is an important and powerful feature of Python. This allows us to pull items from another module and namespace to be available in our code.
+
+\subsection{Importing Code}
+
+You may recall that in a previous lab we attempted this code, at the interpreter prompt.
+
+\begin{lstlisting}
+print(keyword.kwlist)
+\end{lstlisting}
+
+which resulted in an error. Here we are trying to access a list of keywords that is contained in a module called \emph{keyword}. But without having used the \lstinline!import! instruction we do not have access to this module, even though it may exist in your Python installation.
+
+So now we try (as we did before)
+
+\begin{lstlisting}
+import keyword
+print(keyword.kwlist)
+\end{lstlisting}
+
+Now the second command is successful, the use of \lstinline!import! has allowed access to the items in that module within our current module. It isn't necessary to use \lstinline!import! more than once in a given module, and it is considered to be an appropriate part of accepted Python style to place your imports at the top of a file, it makes it very clear which modules your code relies upon.
+
+We can import in other ways. Try these three commands after those above:
+
+\begin{lstlisting}
+print(kwlist)
+from keyword import kwlist
+print(kwlist)
+\end{lstlisting}
+
+This shows another more selective way of importing code. You will see that the first command fails, \lstinline!kwlist! is still unknown outside its container \lstinline!keyword!, but after the second instruction not only has \lstinline!kwlist! been made available, it is now available directly, without using its containing module name.
+
+However, you will want to think very carefully before using this and other ways of importing code, they are not well loved by Python style guides, but also defeat the purpose of using a namespace to keep the names of variables clean. This way you don't get as many name clashes.
+
+Speaking of which:
+
+\begin{lstlisting}
+print(coolwords.kwlist)
+import keyword as coolwords
+print(coolwords.kwlist)
+\end{lstlisting}
+
+shows a nice way of resolving name clashes. Here for instance, if we were already using \lstinline!keyword! in our code we might wish to import the module under another name which doesn't clash. Once again, you shouldn't really do this unless it is necessary.
+
+
+\section{Examples}
+
+Let's now have a look at some useful modules as a way of playing with this functionality.
+
+
+\subsection{os}
+
+First of all, go the Python website and find the \lstinline!os! module documentation for your version of Python (or as close as possible).
+
+\alert{Start a NEW file}
+Proposed name: lab4\_1.py
+\begin{lstlisting}
+# Experiments with the os module
+# Put your name here
+# Import os so this will work on any operating system
+# And sys for good measure
+
+import os
+import sys
+
+print('Some information\n')
+
+print('Operating System Shortname', os.name)
+print('Details')
+print(sys.platform)
+if os.name == 'posix':
+  print(os.uname())
+
+
+finished = False
+while not finished:
+    # Prompt the user for a pathname
+    pathname = input('Give a directory to list: ')
+    # If it's empty, default to the current dir
+    # and flag that we will quit after this loop
+    if(pathname == ''):
+        pathname = '.'
+        finished = True
+        
+    files = os.listdir(pathname)
+    for file in files:
+        print('\t', file)
+\end{lstlisting}
+
+Try playing around with this program for a bit. Remember that we haven't done error handling yet and so the program tends to be fairly unforgiving or errors.
+
+\subsection{time}
+
+First of all, go the Python website and find the \lstinline!time! module documentation for your version of Python (or as close as possible) and make sure you read a bit about the \emph{epoch} used by many operating system. Those of you that are `C' programmers may be used to this already, and may notice the strong similarity of many of Python's time handling function to those of `C' itself.
+
+\alert{Start a NEW file}
+Proposed name: lab4\_2.py
+\begin{lstlisting}
+# Experiments with the os module
+# Put your name here
+# Import time to use time specific functions
+
+import time
+
+epoch = time.time()
+print('There have been',epoch,
+      'seconds since the start of the Epoch')
+
+ctime = time.ctime()
+print('Or to put it another way, the date and time is',
+      ctime)
+
+# We can get an ISO 8601 formatted date time
+# (there's an easier way in the datetime module)
+isodate = time.strftime('%Y-%m-%d %H:%M:%S')
+print('ISO date time is', isodate)
+# See https://xkcd.com/1179/ for more details
+
+# We can do some other interesting stuff
+for x in range(0,10):
+    print('.', end='')
+    time.sleep(1)
+
+\end{lstlisting}
+
+
+\subsection{maths}
+
+Python has a powerful \lstinline!math! module that gives most of the equivalent `C' functions. As before look up the documentation on the Python website. You may not have done enough maths to understand all of this, but let's have fun with a listing anyway.
+
+\alert{Start a NEW file}
+Proposed name: lab4\_3.py
+\begin{lstlisting}
+# Some fun with the math module
+# Put your name here
+
+import math
+
+# Let's look at angles from 0 to 720 every 15 degrees
+angles = range(0,720,15)
+
+# Look at each of these steps
+for angle in angles:
+    # Most trig functions need a thing called radians
+    # Do the conversion
+    radians = math.radians(angle)
+    # Work out the sine of the angle
+    sine = math.sin(radians)
+
+    # This is a number from -1 to 1
+    # Let's scale it from 10 to 50
+    number_spaces = math.floor(20 * sine + 30)
+
+    # Work out a gap by multiplying a string by
+    # a number to make it that long, cool huh?
+    spaces = ' ' * number_spaces
+    # Print the gap, then an o
+    print(spaces, 'o')
+\end{lstlisting}
+
+Also, at the interpreter, check out \lstinline!math.pi! and \lstinline!math.e!.
+
+\subsection{turtle}
+
+As usual, look up the documentation for this module.
+
+\alert{Start a NEW file}
+Proposed name: lab4\_4.py
+\begin{lstlisting}
+# A turtle listing from the docs
+# Import everything in exactly the way we advised against
+# put your name here
+
+from turtle import *
+
+color('red', 'yellow')
+begin_fill()
+
+while True:
+    forward(200)
+    left(170)
+    if abs(pos()) < 1:
+        # this is new, it stops a loop
+        break
+end_fill()
+done()
+\end{lstlisting}
+
+\section{Test Submission}
+
+Finally, write a little functional Python script of your choice and upload it to the Mock Assignment on Blackboard Learn for the module as preparation for doing this for real next week.
+
+\section{Extra Credit}
+
+While there is a lot of individuality in play over how one lays out source code, Python does have some guidelines on how it might be considered best.
+
+Have a read at the style guide. \url{https://www.python.org/dev/peps/pep-0008/}
+
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\end{document}
+
+
+

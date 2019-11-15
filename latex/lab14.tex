@@ -1,0 +1,246 @@
+%
+% Introductrory Software Development - Laboratory 14
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 14},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE204}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{13}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\xkcd}[2]{
+	\begin{center}
+	\includegraphics[scale = 0.5]{../../Figures/png/#1}
+	\newline
+	\url{http://xkcd.com/#2}
+	\end{center}
+	\bigskip
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 14 - Object Oriented Programming
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to deepen understanding of classes;
+\item to look at how classes can interact.
+\end{itemize}
+
+\section{Battleships}
+
+This code is the beginning of some code to build a game of Battleships.
+Enter the code, test it, try to work out how everything works and then
+comment it carefully.
+
+
+\alert{Start a NEW file}
+Proposed name: lab14\_1.py
+\begin{lstlisting}
+# Battleships Game
+# Put your name here
+
+class Battleship(object):
+    '''A class to represent a ship from the game
+    Battleships.
+
+    name      the name of the ship
+    position  a list of tuples that define where the ship is
+    destroyed a boolean variable whether the ship is sunk
+    '''
+
+    def __init__(self, name=''):
+        self.name = name
+        self.destroyed = False
+        self.positions = list()
+
+    def add_position(self, coordinates):
+        self.positions.append(coordinates)
+
+    def check_if_hit(self, coordinates):
+        if self.destroyed:
+            print("You hit an already destroyed ship")
+            return False
+        
+        hit = False
+        for position in self.positions:
+            if coordinates == position:
+                hit = True
+                
+        if hit:        
+            print("The ship has been hit")
+            self.destroyed = True
+        else:
+            print("That was a miss")
+        return hit
+
+
+def main():
+    
+    # Add a ship
+    enterprise = Battleship(name='Enterprise')
+
+    # Define the cells it covers
+    enterprise.add_position((1,2))
+    enterprise.add_position((2,2))
+    enterprise.add_position((3,2))
+
+    # Test the code to see if it is hit
+    enterprise.check_if_hit((5,5))
+    enterprise.check_if_hit((2,2))
+    enterprise.check_if_hit((2,2))
+
+if __name__ == '__main__':
+    main()
+
+\end{lstlisting}
+
+\subsection{Fleets}
+
+Let's allow us to have a collection of ships in a fleet. We'll create another
+class for that. Add this class at the top.
+
+\begin{lstlisting}
+class Fleet(object):
+
+    def __init__(self):
+        self.ships = list()
+
+    def add_ship(self, ship):
+        self.ships.append(ship)
+
+    def count_live_ships(self):
+        afloat = 0
+        for ship in self.ships:
+            if not ship.destroyed:
+                afloat += 1
+
+        return afloat
+\end{lstlisting}
+
+And let's modify \lstinline!main()! a bit.
+
+\begin{lstlisting}
+def main():
+    
+    # Add a ship
+    enterprise = Battleship(name='Enterprise')
+
+    # Define the cells it covers
+    enterprise.add_position((1,2))
+    enterprise.add_position((2,2))
+    enterprise.add_position((3,2))
+
+    ours = Fleet()
+    ours.add_ship(enterprise)
+
+    print(ours.count_live_ships())
+
+    # Test the code to see if it is hit
+    enterprise.check_if_hit((5,5))
+    enterprise.check_if_hit((2,2))
+    enterprise.check_if_hit((2,2))
+
+    print(ours.count_live_ships())
+    
+\end{lstlisting}
+
+\subsection{\_\_str\_\_}
+
+Add a sensible \lstinline!__str__! function to each class that prints out the most important information, for instance, the ship name and whether it is still afloat for the Ship class, and the number of afloat ships for the Fleet class.
+
+\section{Two fleets}
+
+Can you now modify the \lstinline!__main__()! function to have two fleets, each with two ships?
+
+\subsection{Check if hit}
+
+Can you add a \lstinline!check_if_hit()! function to the Fleet class that takes a coordinate and checks if any of the ships in a fleet have been hit?
+
+\section{Would you like to play a game?}
+
+Can you now modify \lstinline!__main__! to set up the fleets, and then loop asking for coordinates and trying to hit ships until one fleet is destroyed?
+
+
+\section{Extra Credit}
+
+Add a function that attempts to hit a random spot. Can this be used to
+create a one player game against the computer? How could it be improved?
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\end{document}
+
+
+

@@ -1,0 +1,388 @@
+%
+% Introductrory Software Development - Laboratory 6
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 6},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE203}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{6}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\xkcd}[2]{
+	\begin{center}
+	\includegraphics[scale = 0.5]{../../Figures/png/#1}
+	\newline
+	\url{http://xkcd.com/#2}
+	\end{center}
+	\bigskip
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 6 - String Manipulation \& Regular Expressions
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to understand and implement simple string manipulation techniques;
+\item to understand the purpose of raw strings;
+\item to use regular expressions to check for specified formats;
+\item to use regular expressions to extract required data.
+\end{itemize}
+
+\section{String Manipulation}
+
+The manipulation of text is an important area of software development, which has only become more important with the rise of the World Wide Web, which essentially serves text in specific formatting, whether it be the raw web pages themselves in HTML, cascading style sheets in CSS, or the scripts that power dynamic websites.
+
+Please review the documentation on built-in types again, especially in relation to strings. %
+%\footnote{
+%\url{https://docs.python.org/3/library/stdtypes.html#string-methods}
+%}
+
+\subsection{Built in methods}
+
+Strings have some useful built in functions. Use this script to explore some of these.
+
+\alert{Start a NEW file}
+Proposed name: lab6\_1.py
+\begin{lstlisting}
+# Simple experiments with strings
+# Put your name here
+
+def test_input(istring):
+    print("isalpha   : ", istring.isalpha())
+    print("capitalise: ", istring.capitalize())
+    print("title     : ", istring.title())
+    print("upper     : ", istring.upper())
+    print("lower     : ", istring.lower())
+    print("swap case : ", istring.swapcase())
+
+    count = istring.lower().count("python")
+    print("There are", count, "occurences of python")
+    if count > 0:
+        print("The first of which is",
+              istring.lower().find("python"),
+              "characters in.")
+
+    print("Replacing python with snake looks like:")
+    print(istring.replace("python", "snake"))
+
+
+def main():
+
+    finished = False
+
+    while not finished:
+        test_string = input(
+            "Enter a string, empty to quit: ")
+        if test_string == "":
+            finished = True
+        else:
+            test_input(test_string)
+
+
+if __name__ == '__main__':
+    main()
+\end{lstlisting}
+
+Experiment with a wide variety of input strings, and ensure you understand what is happening.
+
+Modify your script to test or experiment with at least three other built in methods for strings.
+
+\subsection{Formatting Strings}
+
+There are three useful ways of building strings up from sections in Python. The consensus seems to be that so called \emph{f-strings} are the most powerful of these, but these only appeared in Python 3.6. Further the \emph{format} method below also emerged in Python 3.x and so you will quite possibly encounter older code from the days of Python 2.x using the \emph{C family} formatting.
+
+\subsubsection{`C' family method}
+
+One method owes a great deal to the \lstinline!printf()! function from the `C' family language. Search for \lstinline!printf! in the Python documentation to find information on this.
+This method uses a range of \lstinline!\%! placeholders for different types, then a \lstinline!\%! is used after the string with either one variable to insert in the placeholder, or a \emph{tuple} of a number of placeholders.
+
+\alert{Start a NEW file}
+Proposed name: lab6\_2.py
+\begin{lstlisting}
+size = 10
+
+words = []
+
+for i in range(0, size):
+    user_input = input("Enter word %d :" % i)
+    words.append(user_input)
+
+for i in range(0, size):
+    print("%d: %s" % (i, words[i]))
+\end{lstlisting}
+
+In this case you will see that sequences like \lstinline!%d! and \lstinline!%s! are ``placeholders'', they will be replaced,
+in order, by items listed after the single \lstinline!%! operator after the string closes. This is useful in loops to format code.
+
+In this standard, various sequences can be put between the \lstinline!%! and \lstinline!s! in \lstinline!%s! to fine tune various things like padding and so on. The various choice of letters represent the different types of data.
+
+\subsubsection{\lstinline!.format! method}
+
+Python has a newer method of using \lstinline!{}! placeholders and \emph{format} that you may find easier to use.
+
+\alert{Start a NEW file}
+Proposed name: lab6\_3.py
+\begin{lstlisting}
+size = 10
+
+words = []
+
+for i in range(0, size):
+    user_input = input("Enter word {} :".format(i))
+    words.append(user_input)
+
+for i in range(0, size):
+    print("{}: {}".format(i, words[i]))
+    
+\end{lstlisting}
+
+Here the \lstinline!{}! indicates the placeholders and are replaced by items in the \lstinline!.format()! section immediately after the string.
+
+\subsubsection{f-string method}
+
+The f-string is a more intuitive and powerful approach, and available from Python 3.6. Try this listing:
+
+\alert{Start a NEW file}
+Proposed name: lab6\_4.py
+\begin{lstlisting}
+size = 10
+
+words = []
+
+for i in range(0, size):
+    user_input = input(f"Enter word {i} :")
+    words.append(user_input)
+
+for i in range(0, size):
+    print(f"{i}: {words[i]}")
+        
+\end{lstlisting}
+
+As you might see in this method, we can add variables very directly into strings, provided we place \lstinline!f! or \lstinline!F! directly before the strings to mark them as formatted strings.
+
+Research and implement how to print a floating point number with 2 decimal places in both formats. You might find
+this excellent website informative: \url{https://pyformat.info} for the first two methods. Also check out \url{https://www.datacamp.com/community/tutorials/f-string-formatting-in-python}. It turns out you can add \lstinline!:! type specifiers from \lstinline!.format! immediately after variables in f-strings.
+
+
+
+Research and implement how to print a floating point number with 2 decimal places in both formats. You might find
+this excellent website informative: \url{https://pyformat.info}.
+
+
+\subsection{Raw strings}
+
+Like many programming languages, Python contains some special characters like \lstinline!\n! that produces a newline character. There is also \lstinline!\r! that produced a carriage return and \lstinline!\t! that produced a tab character among others. If you create a string with single quotes and need a single quote within it, one must \emph{escape} that too \lstinline!\'!, and if one needs a backslash itself, it must be repeared \lstinline!\\!.
+
+Sometimes, particularly when working with \emph{regular expressions} it is useful to have a string where any such characters are considered \emph{literally} and not as some special code.
+
+To do this one simply needs to place \lstinline!r! or \lstinline!R! \emph{immediately} before the quote character.
+
+At the interpreter try:
+
+\begin{lstlisting}
+print("A string with \t and \n within it")
+print(r"A string with \t and \n within it")
+\end{lstlisting}
+
+
+\section{Regular Expressions}
+
+Regular expressions are a sophisticated, and hence potentially confusing way of matching complex text expressions.
+
+\xkcd{xkcd_208_regular_expressions}{208}
+
+Please find the documentation for regular expressions, in the \lstinline!re! module in the Python documentation. It is large and complex, so we will dip into only simple bits.
+
+\alert{Start a NEW file}
+Proposed name: lab6\_5.py
+\begin{lstlisting}
+# Simple experiments with regular expressions
+# Put your name here
+import re
+
+def test_input(istring):
+    re_start_hello = r'^hello(.*)$'
+    re_end_world = r'^(.*)world$'
+
+    if(re.fullmatch(re_start_hello, istring) != None):
+        print("Starts with hello")
+
+    if(re.fullmatch(re_end_world, istring) != None):
+        print("Ends with world")
+ 
+
+def main():
+
+    finished = False
+
+    while not finished:
+        test_string = input("Enter a string, empty to quit:")
+        if test_string == "":
+            finished = True
+        else:
+            test_input(test_string)
+
+
+if __name__ == '__main__':
+    main()
+\end{lstlisting}
+
+\subsection{New expressions}
+
+Create and test regular expressions by adding them to the above script. These regular expressions should test for
+
+\begin{itemize}
+\item A number, of any number of digits, following by a period character, followed by as many spaces as desired, followed by any arbitrary text.
+\item An Ulster University student email address.
+\end{itemize}
+
+\subsection{Pattern extraction}
+
+One important use of regular expressions is in \emph{validation}, particularly checking that user input is sane. Sometimes it is desireable to extract information from a pattern for further work.
+
+
+\alert{Start a NEW file}
+Proposed name: lab6\_6.py
+\begin{lstlisting}
+# Simple experiments with regular expressions
+# Put your name here
+import re
+
+sample_text="""
+Mouse,Michael,Mr,10-01-2001
+Duckington,Donald,Mr,23-02-2004
+Mouse,Maisie,Mrs,12-03-2005
+"""
+
+# Use parantheses to capture sections
+pattern = r'^(\w+),.*$'
+
+
+# The splitlines method returns a list of lines
+for line in sample_text.splitlines():
+    match = re.match(pattern, line)
+    if match:
+        print(match.groups())
+\end{lstlisting}
+
+Run the script and then change \lstinline!pattern! to be \emph{each of these in turn}, running each time and considering the output. Can you understand each of these expressions?
+
+\begin{lstlisting}
+pattern = r'^(\w+),.*$'
+\end{lstlisting}
+
+\begin{lstlisting}
+pattern = r'^(\w+),(\w+).*$'
+\end{lstlisting}
+
+\begin{lstlisting}
+pattern = r'^(\w+),(\w+),(\w+).*$'
+\end{lstlisting}
+
+You should see all the information about the captured data being displayed. The \lstinline!groups()! function shows all the match info, but often we want to get just one part, or several. Here we use the \lstinline!group()! function. Note the lack of the terminating s this time. \lstinline!group(0)! returns the whole match, but \lstinline!group(1)! returns the first part in parentheses and so on. Change the end of our listing to be:
+
+\begin{lstlisting}
+# Use parantheses to capture sections
+pattern = r'^(\w+),(\w+),(\w+),([0-9-]+)$'
+
+
+# The splitlines method returns a list of lines
+for line in sample_text.splitlines():
+    match = re.match(pattern, line)
+    if match:
+        print("{} {} {} found".format(
+            match.group(3), match.group(1),
+            match.group(2)))
+\end{lstlisting}
+
+Can you understand what is happening here? See if you can add the date of birth to the output.
+
+
+\section{Extra Credit}
+
+You should check out the huge array of characters available in unicode at the official website \url{http://www.unicode.org} and some more historical information at \url{https://docs.python.org/3/howto/unicode.html}.
+
+Regular expressions are a vast and rich area of study in their own right. This book is an excellent reference. \url{http://shop.oreilly.com/product/9780596528126.do} but Wikipedia has a good reference too \url{https://en.wikipedia.org/wiki/Regular_expression}.
+
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\end{document}
+
+
+

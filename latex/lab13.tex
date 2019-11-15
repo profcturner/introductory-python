@@ -1,0 +1,266 @@
+%
+% Introductrory Software Development - Laboratory 13
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 13},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE203}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{13}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\xkcd}[2]{
+	\begin{center}
+	\includegraphics[scale = 0.5]{../../Figures/png/#1}
+	\newline
+	\url{http://xkcd.com/#2}
+	\end{center}
+	\bigskip
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 13 - Object Oriented Programming
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to revise our basics of classes and objects;
+\item to add simple constructors to classes.
+\end{itemize}
+
+\section{Welcome Back}
+
+It's been a while since the first semester, so this lab is going to revisit the classes we looked at in Lab 12 by way of a refresher, but looking in more detail at the \lstinline!__init__()! function that is used to initialise an object.
+
+This special function is known as a \emph{constructor}.
+
+\section{Classes}
+
+\alert{Check Lab 12!}
+This lab starts off with the exact same beginning as that of Lab 12 to help you get slotted back into the module. You may therefore wish to start with the file \lstinline!lab12_1.py! if you have it.
+
+
+Classes allow variables and code to be wrapped up together. We have been using classes for quite a long time now, but it's time to start learning to make our own.
+
+\alert{Start a NEW file}
+Proposed name: lab13\_1.py
+\begin{lstlisting}
+# Experiments with classes
+# Put your name here
+
+class Person(object):
+    ''' Describes a person
+
+    name    the name of the person
+    age     the age of the person
+    '''
+    def __init__(self):
+        self.name = ''
+        self.age = 0
+
+
+def main():
+    joe = Person()
+
+   print(joe.name)
+   print(joe.age)
+   
+    joe.name = 'Joe Bloggs'
+    joe.age = 25
+
+    print(joe.name)
+    print(joe.age)
+    print(joe)
+
+if __name__ == '__main__':
+    main()
+    
+\end{lstlisting}
+
+Please run this script. You will see that we create a \emph{class} called \lstinline!Person! and an \emph{object} called \lstinline!joe! in the function \lstinline!main()!.
+
+The object behaves like any other variable, but we can use the \lstinline!.! operator to access the component parts of it, either to set the values, or to the read them.
+
+You will notice that the \lstinline!__init__()! function within the class is called automatically when the object is created, and sets up the values inside. This is a \emph{constructor}.
+
+You will also notice the last \lstinline!print! command provides something a bit messy. At the IDLE prompt after running the script, type
+
+\begin{lstlisting}
+help(Person)
+\end{lstlisting}
+
+\subsection{\_\_str\_\_}
+
+Next, try to add another function inside the class. Be careful to copy the indentation of the existing \lstinline!__init__! function. As the underscores suggest, this function name is a bit special.
+
+\begin{lstlisting}
+    def __str__(self):
+        return self.name + ' age: ' + str(self.age)
+\end{lstlisting}
+
+Run the script again. You will see the last \lstinline!print()! function does something more sensible now.
+
+This is the Pythonic way of teaching Python how to print an object, or more accurately, what to do if someone tries to convert an object into a string, which is what happens when \lstinline!print()! is called.
+
+\subsection{Adding member variables}
+
+The variables inside classes are special and are called \emph{members} or \emph{attributes}.
+
+Can you add another member variable called \lstinline!email! to store email addresses into the class, and amend the documentation, and \lstinline!main()! appropriately?
+
+\subsection{Adding member functions}
+
+In Python, member functions are usually called \emph{methods}.
+
+Add another method to the \lstinline!Person! class.
+
+\begin{lstlisting}
+    def input(self):
+        self.name = input('Enter a name :')
+        self.email = input('Enter an email address :')
+        self.age = int(input('Enter the age :'))
+\end{lstlisting}
+
+To call this, change the lines that set the variables inside \lstinline!joe! in \lstinline!main()! to
+
+\begin{lstlisting}
+joe.input()
+\end{lstlisting}
+
+\subsection{Improving the Constructor}
+
+Rewrite the \lstinline!__init__()! function to look as follows.
+
+\begin{lstlisting}
+    def __init__(self, name='', email='', age=0):
+        self.name = name
+        self.email = email
+        self.age = age
+\end{lstlisting}
+
+You should find that your listing continues to work, as in the absence of values being passed into these variables the default values given on the function will work.
+
+However, you should now modify \lstinline!__main__()! to add code as follows.
+
+\begin{lstlisting}
+    fred = Person(name='fred')
+    print(fred)
+\end{lstlisting}
+
+You will see that we can now create \lstinline!Person! objects with only certain member variables set up from the start, experiment with this functionality.
+
+\subsection{Docstrings}
+Complete useful docstrings for the methods in your class.
+
+\section{Writing another class}
+
+\alert{Start a NEW file}
+Proposed name: lab13\_2.py
+
+
+Again, check if you already have the start of this work from Lab 12.
+
+Write another class called \lstinline!Point! which has three attributes, \lstinline!x!, \lstinline!y! and \lstinline!z! that represents a point in three dimensions.
+
+It should include \lstinline!__init__()!, \lstinline!__str__()! and \lstinline!input()! methods that do sensible things.
+
+Test these in your \lstinline!main()! function.
+
+\subsection{Constructor}
+
+Can you now add an \lstinline!__init__()! function that allows any or all of \lstinline!x!, \lstinline!y! and \lstinline!z! to be set up if specified when the \lstinline!Point! object is created?
+
+\section{Quadratic Equations}
+Create a class called \lstinline!Quadratic!.
+
+It should have three member variables: \lstinline!a!, \lstinline!b! and \lstinline!c! which are \lstinline!double! variables. Add an appropriate docstring and \lstinline!__init__()! function that allows these variables to be set, a more friendly \lstinline!input()! function that prompts the user for input as in the first class.
+
+\subsection{Solving the Quadratic}
+
+Write a function called \lstinline!solve! that works out the solutions of the quadratic equation. It should ideally return a tuple of the two possible solutions if there are two.
+
+Remember if $ax^2+bx+c = 0$ then
+\[
+x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+\]
+
+\section{Extra Credit}
+
+Can you have your \lstinline!Quadratic! class return \lstinline!complex! number solutions, (if you have learned what these are!).
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\end{document}
+
+
+

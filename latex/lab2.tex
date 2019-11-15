@@ -1,0 +1,394 @@
+%
+% Introductrory Software Development - Laboratory 2
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 2},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE203}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{2}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 2 - Variables \& Flow Control
+Structures
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to learn skills important to be an auto-didactic developer;
+\item to use comments in code;
+\item to be able to understand and use numeric and string variables;
+\item to introduce some material on lists, tuples and ranges;
+\item to learn to understand the use of \lstinline!if! for flow control in Python.
+\end{itemize}
+
+\section{Comments}
+
+Comments in Python begin with the hash character
+\begin{lstlisting}
+# They can at the beginning of a line
+a = 2 # or at the end of a line to say something pithy.
+\end{lstlisting}
+
+The use of comments in any non trivial code is extremely important, potentially to allow you to cooperate effectively
+with other programmers, but also to explain to yourself when you revisit the code just what you were doing. As we
+continue in our study we will look at other ways of creating \emph{self documenting code}.
+
+
+\section{Variables}
+
+We started using \emph{variables} last week, albeit without any fanfare. Python allows you to assign a name to the value of anything that can be represented as its built in types - and a few other things besides.
+
+You have a lot of flexibility in the kinds of names (often called \emph{identifiers} in programming) that you can attach to variables, and usually variables should be given clear and self explanatory names - not something that often happens in labs and tutorials sadly.
+
+Here are the basic rules:
+\begin{itemize}
+\item identifiers are made up of letters in lower (a-z) or uppercase (A-Z), digits (0-9) or underscores (\_);
+\item they may not \emph{start} with a digit;
+\item you can't use any existing \emph{keyword}.
+\end{itemize}
+
+Note that Python, like many other languages, is case sensitive, so \lstinline!variable! and \lstinline!Variable! would represent different values. It's a good idea to adopt a consistent convention in naming to aid good programming. Your variable names can be as long as you wish, but try to strike a happy medium between usability and readability. Variables that start with underscores are usually used for special, sometimes internal purposes, so these are also best avoided.
+
+Long, multi-word variables can be written in a variety of ways obviously, but two common conventions might be
+
+\begin{lstlisting}
+my_really_long_variable = 2
+MyReallyLongVariable = 2
+myReallyLongVariable = 2
+\end{lstlisting}
+
+Once again the choice is yours, but it's good to be consistent, and follow any \emph{style guidelines} in a project you are working on. \footnote{See also on Wikipedia or otherwise: CamelCase.}
+
+\subsection{Reserved keywords}
+
+Like most languages, Python has a list of words it uses for its own purposes, you may not use any of these as variable names. At the IDLE prompt type:
+
+\begin{lstlisting}
+print(keyword.kwlist)
+\end{lstlisting}
+
+This will produce an error, because the \lstinline!keyword! library code isn't loaded. Let's do this now with something we will explain in more detail later.
+
+\begin{lstlisting}
+import keyword
+print(keyword.kwlist)
+\end{lstlisting}
+
+You should now see a list of keywords you should avoid that is completely up-to-date.
+
+\subsection{Making new variables}
+
+We saw last week that making new variables in Python is extremely simple. You don't need to specify the type as you do anything more difficult that thinking of the name of a variable and using the ``='' sign, known formally as the assignment operator, to assign a value to the variable.
+
+\section{Types}
+
+Go to \url{http://www.python.org} and find the documentation on ``Built-in types'' for the version of Python, or the closest
+one possible to the one you are using (this is shown at the top of IDLE when it runs).
+
+As the documentation is written for programmers of a range of experience and abilities you may not understand all of it, but please have a quick look through it, and have it ready for reference.
+
+
+\section{Numeric Types}
+
+Start IDLE, and type the following instructions, sequentially.
+
+\begin{lstlisting}
+type(2)
+type(3.2)
+type(4-3j)
+\end{lstlisting}
+
+Feel free to experiment with other values too. As you can see this \lstinline!type()! function%
+\footnote{Spoilers: we haven't really talked about functions yet.}%
+allows you to see how Python intepretes the built in type of various values you might type. The three types on show here are \emph{integers} which can be either positive or negative, rather neatly they can be as large as you like as allowed by memory. General numbers or \emph{floating point numbers} are decimals, there is a limit on their precision and largest or smallest value that may vary.%
+\footnote{As they are implemented as \lstinline!double!s in 'C' which will vary in size depending on the processor of your device etc.}%
+You may not have met \emph{complex numbers} yet, but you can see here that when you do, Python will already known how to deal with them.
+
+We can use functions \lstinline!int()!, \lstinline!float()! and \lstinline!complex()! to convert things (where possible) to these types.
+
+\section{Sequence Types}
+
+Sometimes we want to group things that are related in some ways. Python provides for many of these situations.
+
+\subsection{Lists}
+
+Let's play with an example
+
+\begin{lstlisting}
+numbers1 = [8,3,5,7,2,1,2]
+numbers2 = [2,4,3]
+type(numbers1)
+numbers1
+\end{lstlisting}
+
+As you will see, this has produced a \lstinline!list! of items, in this case all integers but a list can contain pretty much anything, including other lists.
+
+Let's see some of the things we can do with this simple list.
+
+\begin{lstlisting}
+2 in numbers1
+3 in numbers1
+numbers1[0]
+numbers1[1]
+numbers1[2]
+numbers1[99]
+numbers[1:4]
+len(numbers1)
+min(numbers1)
+max(numbers1)
+numbers1.count(5)
+numbers1.count(2)
+numbers1+numbers2
+numbers1.reverse()
+numbers1
+numbers1.sort()
+numbers1
+numbers1.append(-4)
+numbers1
+\end{lstlisting}
+
+Please try and ensure you can work out what all these things are doing, experiment with different numbers, consult the documentation etc.
+
+One of the most important things about lists is being able to \emph{iterate} over them, which we will explore later. We can  use some code \lstinline!list()! of \lstinline![]! to create lists as being empty. We can then use \lstinline!listname.append()! to add things to the end of the existing list which is a powerful way of remembering things as you go along. We will see this later.
+
+\subsection{Tuples}
+
+\emph{Tuples} are a concept in Python that allows some items to be grouped together which naturally belong together. They are often used in Python to return more than one item. We will see how they work more throughout the module but there is one neat trick worth looking at on the way through.
+
+\begin{lstlisting}
+# We can assign two variables at the same time with tuples
+(x, y) = (2, 3) 
+# They still exist separately
+x
+y
+# And we can swap two variables without a third
+(y, x) = (x, y)
+x
+y
+\end{lstlisting}
+
+Our example uses two objects but Tuples can have as many as you wish, but generally a list might be better for a large collection.
+
+\subsection{Ranges}
+
+Quite often we have a need to produce a list of numbers that are used to regulate a \emph{loop} as we shall see later. A \emph{range} is a way of doing this.
+
+\begin{lstlisting}
+range(0,10)
+\end{lstlisting}
+
+You will see that Python just prints out the same thing, the range hasn't been expanded yet (for fairly cool reasons to do with huge ranges). We can use the \emph{list()} function to force the conversion of the range so we can have a look at what is going on.
+
+\begin{lstlisting}
+list(range(0,10))
+list(range(3,42))
+\end{lstlisting}
+
+We can also have ranges that go downwards, or that miss some values.
+
+\begin{lstlisting}
+list(range(3,42,3))
+list(range(0,-10,-1))
+\end{lstlisting}
+
+Most of the operations that worked on our list above will also work on tuples and ranges.
+
+\section{Strings}
+
+In programming we refer to collections of text characters as \emph{strings}. We use strings to represent words (fixed text is often referred to as \emph{string literals}) but also sometimes very extensive amounts of text data because Python makes string handling very simple.
+
+\begin{lstlisting}
+# We can use double quotes
+x = "Hello"
+# Or single quotes
+y = 'World'
+# Or triple quotes
+z = '''this
+is multiline
+text'''
+x
+y
+z
+print(z)
+\end{lstlisting}
+
+Note the special character that is used to show a new line here.
+
+\begin{lstlisting}
+x + y
+x + " " + y
+x[1]
+x[1:4]
+len(x)
+len(z)
+x.swapcase()
+x.upper()
+x is y
+x < y
+z.find('aardvark')
+z.find('this')
+z.find('text')
+x.isnumeric()
+x.isalpha()
+\end{lstlisting}
+
+We saw last week that in Python 3, the function \lstinline!input()! allows us to prompt for text from the user and reads it into a variable that is of type string. We will want to use functions like \lstinline!int()! in order to convert things were type is necessary.
+
+\section{Controlling Program Flow}
+
+To do anything reasonably useful in code we need to be able to direct the flow of code in particular ways.
+
+\subsection{if}
+
+Last week we showed how the \emph{if} keyword can be used in Python to direct flow. The following is \emph{pseudo code}, it won't work as written so don't type it in, it's designed to be illustrative.
+
+The basic format is
+\begin{lstlisting}
+if <something true or false>:
+    # the next piece should be indented
+    <statement to do if true>
+\end{lstlisting}
+
+but frequenly we will add an \lstinline!else! clause too.
+
+\begin{lstlisting}
+if <something true or false>:
+    # the next piece should be indented
+    <statement to do if true>
+else:
+    # indentation is the same as above
+    <statement to do if false>
+\end{lstlisting}
+
+We can also add one or more \lstinline!elif! sections for emph{else if} tests other situations.
+
+It's a little bit of a pain handling the indentation in the interactive mode, so let's look at creating a complete script as a file as we did last week.
+
+\alert{Start a NEW file}
+Proposed name: lab2\_1.py
+\begin{lstlisting}
+# Learning about if
+# Place your name here
+
+# Get a string from the user
+user_input = input("Please enter an integer: ")
+if not user_input.isnumeric():
+    print("that wasn't an integer you know...")
+else:
+    print("thanks")
+\end{lstlisting}
+
+Of course, run it and play with it a little. Now suppose we want to remember that number, and ask for another. This means we want to put another statement in the \lstinline!else! section of the code. In programming we talk about \emph{suites} of statements that we group together, in most modern languages this is done by surrounding them with braces, but Python uses indentation to work out what bits go together.
+
+Change the \lstinline!else! section to look like this.
+\begin{lstlisting}
+else:
+    print("thanks")
+    # Ok, let's put this into a float variable
+    number1 = int(user_input)
+\end{lstlisting}
+
+And can you now add code to do the same \emph{again} but to save a number into \lstinline!number2!?
+
+Now can you add this code at the end?
+
+\begin{lstlisting}
+# Let's compare these
+if number1 > number2:
+    print("Hmm. the first number was bigger")
+elif number2 > number1:
+    print("the second number was bigger")
+else:
+    print("ah, nice try, they were the same")
+\end{lstlisting}
+
+Have a play with this script. It's quite poorly written in that it doesn't elegantly take care of all eventualities. Can you see where it breaks? Can you fix it? Don't worry if not, today.
+
+\section{Extra Credit}
+
+Please email me with a subject titled "github" with your github username that you created last week.
+
+Consider using \url{http://www.gravatar.com} or something similar (check GitHub for details) to add an image associated with your email address.
+
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\end{document}
+
+
+

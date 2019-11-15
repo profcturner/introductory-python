@@ -1,0 +1,234 @@
+%
+% Introductrory Software Development - Laboratory 19
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 19},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE203}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{19}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\xkcd}[2]{
+	\begin{center}
+	\includegraphics[scale = 0.5]{../../Figures/png/#1}
+	\newline
+	\url{http://xkcd.com/#2}
+	\end{center}
+	\bigskip
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 18 - Sockets and Client / Servers
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to be able to open sockets and pass messages between a client and server script.
+\end{itemize}
+
+\section{Introduction}
+
+To undertake this lab we will build on some work we did with Bluetooth in the previous lab. You will need to work with a partner on this lab. If you are an odd numbered team of three that's also fine, just ensure you are all working through how everything works.
+
+Try and use the code from the last week's lab to deduce the Bluetooth addresses of the computers you are using.
+
+We will produce a script known as a \emph{server}, this will use a \emph{socket} which can be used to communicate via Bluetooth or Internet protocols (the former in this case) to listen for connections and receive data.
+
+Another computer will run a \emph{client} script that uses a socket on its end to make a connection and send data.
+
+
+
+
+\section{Running a Server}
+
+\alert{Start a NEW file}
+Proposed name: lab19\_server.py
+
+Acquire the code from \url{https://github.com/karulis/pybluez/blob/master/examples/simple/rfcomm-server.py} and place it in a new python script.  Read the code carefully and see if you can work out which bit each part does.
+
+Get this script listening on one machine within your pair of people or small group.
+
+\section{Running a Client}
+
+On the other machine, get the matching client code.
+
+\alert{Start a NEW file}
+Proposed name: lab19\_client.py
+
+This can be found at \url{https://github.com/karulis/pybluez/blob/master/examples/simple/rfcomm-client.py}
+
+Read through the code and see if you can understand it. Can you get it to run?
+
+\section{Improving the server}
+
+Can you modify the server script so that after checking for data and printing on the server it also calls \lstinline!client_sock.send(data)!. What does this do?
+
+
+\section{Improving the client}
+
+Of course there could be several servers running in the class at the same time. Can you see a problem in the client script? How does it work out what server to connect to?
+
+Can you modify the client to display all the addresses and bluetooth device names in the service matches and to allow the user to choose which one to connect to?
+
+
+\section{Experiment}
+
+See what else you can change. Can you run both client and server script on the same machine? Can you run multiple server scripts on the same machine, or multiple client scripts?
+
+\section{Extra Credit}
+
+More information about sockets is available here: \url{https://docs.python.org/3/howto/sockets.html} and widely available on-line.
+
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\begin{lstlisting}
+a# Work with Bluetooth
+
+# We will need the pyBluez library installed
+import bluetooth
+
+
+def SelectBluetoothDevice():
+    """Scan for the Bluetooth devices in the area and allow
+    one to be picked. The function returns a Bluetooth
+    address, or None if no device is picked."""
+
+    print("Please wait, scanning for devices...")
+    # Scan for the devices around
+    devices = bluetooth.discover_devices()
+
+    # Show them in a list, with an index
+    index = 0
+    print("List of devices with addresses and names.")
+    for device in devices:
+        print(index, device, bluetooth.lookup_name(device))
+        index+=1
+
+    index = int(input("Pick a device to check: "))
+    if (index < 0 or index >= len(devices)):
+        print("Invalid choice.")
+        return None
+    else:
+        # It's a valid choice, return the BT address
+        return devices[index]
+
+
+def ShowBluetoothServices(device):
+    """Takes a Bluetooth address and shows the
+    services available"""
+
+    print("You choose", device, bluetooth.lookup_name(device))
+
+    print("Looking for services...")
+    services = bluetooth.find_service(address=device)
+    for service in services:
+        print("Name        {}".format(service["name"]))
+        print("Description {}".format(service["description"]))
+        print("Protocol    {}".format(service["protocol"]))
+        print("Port        {}".format(service["port"]))
+        print()
+
+
+def main():
+    """Function to select a Bluetooth device and
+    print its services"""
+    
+    # Keep going until interrupted by Ctrl-C
+    while True:
+        # Select a device 
+        device = SelectBluetoothDevice()
+        if device == None:
+            # No device was available or no valid one chosen
+            print("No device chosen.")
+        else:
+            # Show the services for the device
+            ShowBluetoothServices(device)
+        
+if __name__ == '__main__':
+    main()
+
+\end{lstlisting}
+
+\section{Extra Credit}
+
+This code has no resilience checking for the Bluetooth code calling, add this for extra credit.
+
+\end{document}
+
+
+

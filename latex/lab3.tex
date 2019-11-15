@@ -1,0 +1,396 @@
+%
+% Introductrory Software Development - Laboratory 3
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 3},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE203}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{3}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 3 - Loops \& Functions
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to understand and implement \lstinline!for! and \lstinline!while! loops;
+\item to understand and implement functions;
+\item to call functions and return values;
+\item to create self contained scripts built on functions.
+\end{itemize}
+
+\section{Loops}
+
+Loops are a way of making a program perform repetitive tasks.
+
+\subsection{for loops}
+
+Let's dive right in with the interpreter.
+
+\begin{lstlisting}
+z = "Hello World"
+for x in z:
+    print(x)
+\end{lstlisting}
+
+So what is this doing? The keyword \lstinline!for! attempts to \emph{loop} around the values fed to it. It allows you to execute code multiple times, in this case we are also exploiting the fact that a string is a sequence. Here it creates a sequence of all the characters in the string and we can run through them. Let's look at some other examples.
+
+\begin{lstlisting}
+z = "Hello World"
+for x in [6,9,-2,3]:
+    print(x)
+\end{lstlisting}
+
+You will see this is the kind of thing that \emph{ranges} are made for.
+
+\begin{lstlisting}
+for x in range(0,-10,-1):
+    print(x)
+\end{lstlisting}
+
+Let's try another complete script.
+
+\alert{Start a NEW file}
+Proposed name: lab3\_1.py
+\begin{lstlisting}
+# Learning about for and lists too
+# Put your name here
+
+# Control how big the list gets
+size = 10
+
+# Create an empty list
+numbers = list()
+
+# Let's do this repeatedly
+for x in range(0, size):
+    number = int(input("%u: Give me an integer :" % x))
+    # Now let's add this to the list with this nifty append
+    numbers.append(number)
+
+# Can we print it out again?
+print("Ok, so that was:")
+
+# Loop again, in another way
+for x in numbers:
+    print(x)
+\end{lstlisting}
+
+Look carefully at the arguments given to \lstinline!input()!, can you see what it does?
+
+Can you modify this listing to print out the total of all the entered numbers?
+
+\subsection{while loops}
+
+A while loop takes a simple true / false condition and executes a command or suite of commands for as long as that condition is true. Usually the command or suite will have some effect upon the condition, as otherwise the loop can be accidentally \emph{infinite}. However there are some times when such infinite loops are actually the hoped for behaviour.
+
+\begin{lstlisting}
+# This will print hello forever
+while True:
+    print("hello")
+\end{lstlisting}
+
+If you do type this in, you will probably need something like Ctrl-C to stop the program or it will continue indefinitely.
+
+It is possible to duplicate the behaviour of \lstinline!for! loops with while, at least to some extent, if rather pointless.
+
+\begin{lstlisting}
+loop = 0
+while loop < 10:
+    print("hello")
+    loop += 1
+\end{lstlisting}
+
+Let's look at a variation on the \lstinline!for! listing we used above.
+
+\alert{Start a NEW file}
+Proposed name: lab3\_2.py
+\begin{lstlisting}
+# Learning about while and lists too
+# Put your name here
+
+# Create an empty list
+words = list()
+finished = False
+
+# Let's do this repeatedly
+while not finished:
+    word = input("Give me a word or two, (empty to quit) : ")
+    if word == "":
+        # The word was empty
+        finished = True
+    else:
+        words.append(word)
+
+
+# Can we print it out again?
+print("Ok, so that was", len(words), "entries and they were")
+
+# Loop again, in another way
+for x in words:
+    print(x)
+
+\end{lstlisting}
+
+\section{Functions}
+
+In most programming languages it is important to be able to divide code into small chunks that are largely self contained. These might variously be called methods, procedures of functions, but in Python we talk about \emph{functions}.
+
+Functions usually can take a number of \emph{arguments} or sometimes none that help alter the way the code is executed. Similarly functions may return values as well, or not as required. Python is a bit unusual in that because it is possible to return \emph{tuples} as any other variable type, it is basically routine to return several values.
+
+We have been using functions routinely over the last few weeks, such as the \lstinline!print()!, \lstinline!int()!, \lstinline!input()! functions just to name a few.
+
+The basic format of a function is as follows.
+
+\begin{lstlisting}
+# pseudo-code, don't type this in!
+def function_name([arguments]):
+    "a documentation string can go here"
+    # the suite of command goes here
+\end{lstlisting}
+
+Let's start another simple listing
+
+\alert{Start a NEW file}
+Proposed name: lab3\_3.py
+\begin{lstlisting}
+# Learning about functions
+# Put your name here
+
+def hello_world():
+    """This is a really basic function that takes
+    no arguments and returns no arguments"""
+    print("Hello World")
+
+def add_numbers(number1, number2):
+    """This takes two numbers and adds them together
+    and returns the result"""
+    result = number1 + number2
+    return result
+
+\end{lstlisting}
+
+When you type and run this module you will discover (if you haven't
+made any errors) that nothing seems to happen. But at the interpreter prompt now you have run the script please type
+
+\begin{lstlisting}
+help(hello_world)
+hello_world()
+help(add_numbers)
+add_numbers(2,3)
+\end{lstlisting}
+
+You will see that if we add the documentation string, and I have deliberately used the triple quoted multiline version, that the built in \lstinline!help()! command can provide help on the function. For that reason I strongly suggest that you make this a non-optional part; add this string for every single function you write, in preference to a simple in-code comment which only serves to help if you look at the code directly.
+
+You will also see that to run a function we simply use its name with brackets afterwards, with nothing between them in the case of a function with no arguments, or specifying the list of arguments if necessary.
+
+You will also observe that the value of addition is displayed in the interpreter. This is because the interpreter will show any value determined by execution. Normally we will need to capture that value.
+
+Note that in the function \lstinline!add_numbers()! we use the \lstinline!return! keyword to return a specific value from the function and to terminate the function. This keyword can be used in multiple places to terminate functions early or return different values, and can be used without a parameter to terminate a function early.
+
+\begin{lstlisting}
+addition = add_number(4,6)
+print(addition)
+\end{lstlisting}
+
+If you remember our listing lab2\_1.py from last week you may recall we had to duplicate code to read in two numbers. This was clumsy and a function is a better way of doing this. Add this function to your listing
+
+\begin{lstlisting}
+def read_number():
+    """Asks for a number and returns it"""
+    number = int(input("Please enter a number : "))
+    return number
+\end{lstlisting}
+
+Run the script and play with the function to make sure it works correctly.
+
+\subsection{The main function}
+
+It is customary to have a function called \lstinline!main()! which is the one that kicks everything off in a program. This is really a homage to the `C' programming language where this is compulsory.
+
+Let's add one to our script.
+
+\begin{lstlisting}
+def main():
+    """The function that brings it all together"""
+    hello_world()
+    a = read_number()
+    b = read_number()
+    addition = add_numbers(a, b)
+
+    print(a, "plus", b, "is", addition)
+\end{lstlisting}
+
+If you run the script you will note that you still have to call \lstinline!main()! from the interpreter to make the program work. However, you may see that this is already more elegant and easy to read that the version we did last week.
+
+Let's add one last bit of code to the bottom
+
+\begin{lstlisting}
+if __name__ == '__main__':
+    main()
+\end{lstlisting}
+
+You should see the script now starts itself. We could just have placed a call to \lstinline!main()! at the bottom but this formulation turns out to help in ways we will understand more later.
+
+\subsection{Default Values}
+
+One very useful feature of functions in Python, and in some other languages is that of \emph{default values}.
+
+Here's another, very small script.
+
+\alert{Start a NEW file}
+Proposed name: lab3\_4.py
+\begin{lstlisting}
+# Put your name here
+"""A simple script to test default parameters"""
+
+def create_list(size = 10):
+    """create a list of numbers from user input
+
+    size:   an integer of how many numbers to read,
+            defaults to 10"""
+
+    print(size, "items to be asked for")
+    
+    numbers = list()
+    for x in range(0, size):
+        number = int(input("Please enter a number : "))
+        numbers.append(number)
+
+    return numbers
+
+def main():
+    """the function to kick it all off"""
+
+    # Ask for 5 numbers
+    numbers = create_list(5)
+    print(len(numbers), "items:", numbers)
+
+    # Use the default
+    numbers = create_list()
+    print(len(numbers), "items:", numbers)
+
+if __name__ == '__main__':
+    main()
+\end{lstlisting}
+
+If you look carefully at this listing you will see that \lstinline!create_list()! is called in two different ways. One of them specifies the number of items to be in the list, the other does not, and so the default value of ten is used.
+
+At the interpreter, once again type
+
+\begin{lstlisting}
+help(create_list)
+help(print)
+\end{lstlisting}
+
+Does the help entry for \lstinline!print()! start to make more sense yet? You can see there are several defaults, a space to place between values, a newline to be printed at the end, the file is \lstinline!sys.stdout! and a \lstinline!flush! parameter.
+\footnote{More on all this later in the module.}
+You can feel free to specify some of these values, where you can use the name of the variable to override the default value.
+
+For instance.
+\begin{lstlisting}
+print("hello","world","spam","eggs")
+print("hello","world","spam","eggs",sep="aardvark")
+print("hello","world","spam","eggs",sep="\n\n")
+\end{lstlisting}
+
+\subsection{Good Practice}
+
+A note on good practice for functions. Functions should be generally reasonably small. A good guideline is that a function should in most cases fit comfortably into the screen of your editor.
+
+They should have clear names that describe intuitively what they do.
+
+They should be well documented and easy to test.
+
+\subsection{Scope}
+
+You will notice that we have created variables within functions. There are known as \emph{local variables} in that their \emph{scope} is limited to the function they are in, they are not accessible from outside the function and they are destroyed when the function completes. This is part of what makes functions self contained and more \emph{maintainable}.
+
+You can have what are called \emph{global variables} that are created outside of any function. These can be accessed from anywhere in the program, but this is considered inherently bad practice, and should be avoided as much as is possible. If you do this, you will need to use \lstinline!global! in front of the variable name in a function to access it, but basically don't do this... it will make you program harder to maintain and more error prone in most cases.
+
+\section{Extra Credit}
+
+If you haven't already done so, you should be collecting all your scripts from the first three weeks together on a USB stick or similar.
+
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\end{document}
+
+
+

@@ -1,0 +1,355 @@
+%
+% Introductrory Software Development - Laboratory 7
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 7},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE203}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{7}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\xkcd}[2]{
+	\begin{center}
+	\includegraphics[scale = 0.5]{../../Figures/png/#1}
+	\newline
+	\url{http://xkcd.com/#2}
+	\end{center}
+	\bigskip
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 7 - File Input \& Output
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to understand how to open files in various modes;
+\item to be able to read and write data from and to files;
+\item to be able to move around within files;
+\item to serialise complex data.
+\end{itemize}
+
+\section{Standard Files}
+
+File input and output is achieved in Python by file objects. While we have yet to formally talk about objects we have already encountered a few.
+
+While many programs will create specific objects there are three that are defined in the \lstinline!sys! package.\footnote{
+\url{https://docs.python.org/3/library/sys.html}
+}
+
+These are
+
+\begin{lstlisting}
+sys.stdin # standard input (normally used by input())
+sys.stdout # standard output (normally used by print())
+sys.stderr # standard error
+\end{lstlisting}
+
+Some of these input streams can be redirected when programs are called. Standard error behaves likes Standard output, except that if the normal output is redirected or silenced, the error messages will still appear.
+
+At the IDLE interpreter, let us revisit the help for \lstinline!print()!.
+
+\begin{lstlisting}
+help(print)
+\end{lstlisting}
+
+You will need note that the function takes an argument called \lstinline!file = sys.stdout!. So that \lstinline!print()! can be used to write to any file, it just happens to use the standard output, that normally goes to the screen and not a file by default.
+
+Similarly in all the content to follow where file objects are used, we can apply these functions to these standard objects.
+
+\section{Opening Files}
+
+While you have the IDLE interpreter open
+
+\begin{lstlisting}
+help(open)
+\end{lstlisting}
+
+will produce quite a lot of content. Get to the start of it. You will see that \lstinline!open()! takes quite a few parameters, all but one of which has a default value. The first parameter is the name of the file, as a string. The second is a \emph{mode} and you will find a table of the common modes (which come from the `C' function \lstinline!fopen()!.
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+`r' & open for reading (default) \\
+w' & open for writing, truncating the file first \\
+'x' & create a new file and open it for writing \\
+'a' & open for writing, appending to the end of the file if it exists \\
+'b' & binary mode \\
+'t' &text mode (default) \\
+'+' & open a disk file for updating (reading and writing) \\
+'U' & universal newline mode (deprecated) \\
+ \hline
+\end{tabular}
+\end{center}
+
+First of all note that there are two major modes of handling files, one is for \emph{text} - the default, and one is for more raw data or \emph{binary}. It's important to pick the right mode for the job. After this we pick modes for reading and/or writing.
+
+\subsection{Writing A File}
+
+\alert{Start a NEW file}
+Proposed name: lab7\_1.py
+\begin{lstlisting}
+# Writing a file
+# Put your name here
+
+def pick_filename():
+    filename = input("Pick a filename: ")
+    return filename
+
+def write_file(filename):
+    print("Attempting to open file {}".format(filename))
+    finished = False
+    with open(filename, 'w') as f:
+        while not finished:
+            line = input("(text, empty to quit) ")
+            if line != "":
+                f.write(line)
+            else:
+                finished = True
+            
+def main():
+    filename = pick_filename()
+    write_file(filename)
+
+if __name__ == '__main__':
+    main()
+\end{lstlisting}
+
+We will learn more about the use of \lstinline!with! later, but essentially it is to help with error handling, the suite of code underneath will be called on success, and the file will be closed when the suite finishes. As you can see the item returned by \lstinline!open()! is placed in a variable \lstinline!f!, and we learn that \lstinline!f.write()! is used to write contents to the file.
+
+Try running the listing, use a filename ending in \emph{.txt} to have a look, with Notepad or a similar tool at the files produced. You will see they are a bit ugly due to the lack of newline at the end of each entered line.
+
+Try changing the use of \lstinline!write()! to be.
+
+\begin{lstlisting}
+f.write(line + '\n')
+\end{lstlisting}
+
+and re-run the listing. Finally try:
+
+\begin{lstlisting}
+print(line, file=f)
+\end{lstlisting}
+
+instead.
+
+Add docstrings and comments throughout the listing as you work out what each part does. Look at the \lstinline!help()! for \lstinline!write!.
+
+
+Once you have done all this, use your program to create a file with several lines of text and plenty of words.
+
+\subsection{Reading A File}
+
+This time, let's look at reading from a file.
+
+\alert{Start a NEW file}
+Proposed name: lab7\_2.py
+\begin{lstlisting}
+# Reading a file
+# Put your name here
+
+def pick_filename():
+    filename = input("Pick a filename: ")
+    return filename
+
+def read_file(filename):
+    print("Attempting to open file {}".format(filename))
+    with open(filename, 'r') as f:
+        num_words = 0
+        all_lines = f.read()
+        lines = all_lines.splitlines()
+        print("{} lines read.".format(len(lines)))
+        
+        for line in lines:
+            print(line)
+            words = line.split()
+            num_words += len(words)
+        print("{} words in total.".format(num_words))
+            
+def main():
+    filename = pick_filename()
+    read_file(filename)
+
+if __name__ == '__main__':
+    main()
+
+\end{lstlisting}
+
+Run the script and use it on the same file you created in the first part. Note the use of the \lstinline!read()! function which simply reads the whole file into a string. This might be problematic in large files.
+
+Work out what each part of the program does and add docstrings and comments.
+
+\section{Seek and Tell}
+
+Go to the IDLE interpreter.
+
+\begin{lstlisting}
+f = open('test.txt', 'r')
+\end{lstlisting}
+
+You will need to change the filename to be the one you have used above.
+
+\begin{lstlisting}
+f.read(4)
+f.read(4)
+f.tell()
+\end{lstlisting}
+
+You will see this reads 4 characters at a time from the file, a different four both times as a pointer records how far through the file we are. The \lstinline!tell()! function returns the position of that pointer.
+
+\begin{lstlisting}
+f.seek(20)
+f.read()
+f.seek(0)
+f.read(4)
+f.read(4)
+f.tell()
+\end{lstlisting}
+
+You will see that \lstinline!seek()! can be used to move around within the file
+
+\section{Serialisation}
+
+Sometimes one wishes to store an item into a file that isn't just plain text. For instance, one might want to store a list. This kind of job in programming is called \emph{serialization} and Python has a module to help called \lstinline!pickle!.
+
+\alert{Start a NEW file}
+Proposed name: lab7\_3.py
+\begin{lstlisting}
+# Reading and Writing other things.
+# Put your name here
+import pickle
+
+def pick_filename():
+    filename = input("Pick a filename: ")
+    return filename
+
+def create_list():
+    finished = False
+    items = []
+    while not finished:
+        item = input("(text, empty to quit) ")
+        if item != "":
+            items.append(item)
+        else:
+            finished = True
+
+    return items
+
+def write_file(filename, items):
+    print("Attempting to open file {}".format(filename))
+    with open(filename, 'bw') as f:
+        pickle.dump(items, f)
+
+def read_file(filename):
+    print("Attempting to open file {}".format(filename))
+    with open(filename, 'rb') as f:
+        items = pickle.load(f)
+        return items
+
+            
+def main():
+    filename = pick_filename()
+    # Create a list
+    items = create_list()
+    # Save it to a file
+    write_file(filename, items)
+    # Load it from a file
+    loaded_items = read_file(filename)
+    # Print them
+    print(loaded_items)
+    # Check them
+    if items == loaded_items:
+        print("restored correctly")
+
+if __name__ == '__main__':
+    main()
+\end{lstlisting}
+
+Understand what this program does by referring to the \lstinline!pickle! documentation. Add docstrings and comments. And as usual, experiment with the script.
+
+
+\section{Extra Credit}
+
+Go over the feedback from your first test and try to make any corrections needed in your program.
+
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\end{document}
+
+
+

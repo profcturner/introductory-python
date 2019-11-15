@@ -1,0 +1,204 @@
+%
+% Introductrory Software Development - Laboratory 20
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 20},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE203}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{20}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\xkcd}[2]{
+	\begin{center}
+	\includegraphics[scale = 0.5]{../../Figures/png/#1}
+	\newline
+	\url{http://xkcd.com/#2}
+	\end{center}
+	\bigskip
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 20 - Correct Faults
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to practice identifying faults in code.
+\end{itemize}
+
+\section{Example}
+
+What is wrong with the following example.
+
+\begin{lstlisting}
+print "hello world"
+\end{lstlisting}
+
+Is there a reason why code like this would be common to see?
+
+\section{Example}
+
+Can you find the fault in this code to print a dividing line?
+
+\begin{lstlisting}
+number = 20
+
+divider = "*" * Number
+print(divider)
+\end{lstlisting}
+
+
+
+\section{Example}
+
+How many faults are in this piece of code. Can you fix them?
+
+\begin{lstlisting}
+number1 = input("Enter a first number"))
+number2 = input("Enter a second number"))
+
+print("The total is", number + number2)
+\end{lstlisting}
+
+\section{Example}
+
+Can you find the fault in the piece of code?
+
+\begin{lstlisting}
+1number = int(input("Enter a number"))
+2number = int(input("Enter another number"))
+
+3number = 1number + 2number
+\end{lstlisting}
+
+\section{Example}
+
+How many faults are in this piece of code? Can you fix them?
+
+\begin{lstlisting}
+for n in range(0,11)
+  total = total + range
+  
+print total
+\end{lstlisting}
+
+\section{Example}
+
+How many faults are these in this piece of code? Can you fix them?
+
+\begin{lstlisting}
+x = input("x + 2 = 4. What is x?")
+
+if x = 2:
+  print("Yes.")
+else
+  print("No.")
+\end{lstlisting}
+
+\section{Example}
+
+What is the main problem with this piece of code?
+
+\begin{lstlisting}
+for=input("What is the reason for your message")
+
+if for == "notice":
+  print("Thank you")
+\end{lstlisting}
+
+\section{Example}
+
+There are a number of mistakes in this code. Can you find and fix them?
+
+\begin{lstlisting}
+# Calculate 1 x 2 x 3 .. x 10
+product = 0
+for n in range(0,9):
+  product = product * n
+  
+print("The answer is", n)
+\end{lstlisting}
+
+
+
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\end{document}
+
+
+

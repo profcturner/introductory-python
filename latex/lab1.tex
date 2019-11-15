@@ -1,0 +1,322 @@
+%
+% Object Oriented Programming - Laboratory 1
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 1},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE203}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{1}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+
+%\lstset{
+ % language=python,
+  %basicstyle=\ttfamily,
+  %flexiblecolumns=true,
+  %lineskip=-2pt,
+  %commentstyle=\color{blue},
+ % morecomment=[s][\color{red}]{/**}{*/},
+%  frame=l,
+ % numbers=left,
+ % numberstyle=\tiny,
+ % stepnumber=5,
+ % numbersep=5pt,
+ % backgroundcolor=\color[rgb]{0.95, 0.95, 0.95}
+%}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 1 - IDLE, Output, Logic \& Arithmetic
+Structures
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to obtain basic familiarity with the programming environment;
+\item to obtain initial practice in interacting with IDLE directly;
+\item to learn to understand very basic output;
+\item to learn and use the Python syntax for logic and arithmetic;
+\item to understand how to access the Python documentation.
+\end{itemize}
+
+\section{Working With These Labs}
+
+This is your first lab for this module. Please work through all the tasks carefully; you should:
+\begin{itemize}
+\item read all the text carefully;
+\item practice typing everything out, don't cut and paste (at least from these sheets, it's fine in your own code) at this stage you need the practice of actually typing and laying out code;
+\item think carefully about what is happening at each stage;
+\item experiment a bit or a lot, try and break things or extend them;
+\end{itemize}
+\alert{Make mistakes!}
+don't just race towards the end, this is about learning by doing, both bits are important. Don't be scared of mistakes, in fact you \emph{must} make a lot of mistakes to learn any type of programming, so get started making them right away.
+
+\section{Starting IDLE}
+
+We are using IDLE to get started. IDLE is simple, quite slow and has a number of limitations, but it is easy to use and available on all major operating systems for free. You can always use another editor, and in time I would strongly recommend you do.
+
+You should first start IDLE. The precise way of doing this will depend a little on your chosen Operating System.
+Note that if you are using GNU/Linux for this IDLE is often an optional extra so check it is installed first.
+
+\alert{Check the Version}
+When you open IDLE, be careful to check the version of Python that is running at the very top of the window. These labs are designed for Python 3.x and if you are running 2.x you are likely to encounter problems.
+
+When you first start IDLE it will suggest three things to type for information: \lstinline!copyright!, \lstinline!credits! and \lstinline!license()!.
+Please try all of these in sequence, the license information is long, so you may just want to glance it for now, but be aware that is there.
+
+Also please try typing \lstinline!help()! and seeing what appears. The online Python tutorial is really well worth a look, but it may be
+easier to understand for those experienced with other languages. You will need to enter \lstinline!quit! to leave this help mode.
+
+\section{Hello World}
+
+The program that all students of all languages tend to start with is the minimal program required to print the text ``Hello World''.
+In Python this is particular elementary.\footnote
+{
+A reminder that we are using Python 3 here, the parentheses in the line below aren't required in Python 2
+}
+Simply type the following at the prompt and press enter.
+
+\begin{lstlisting}
+print ("Hello world")
+\end{lstlisting}
+
+It doesn't get much simpler than this. We can get some more information, if we want it, about this command by typing \lstinline!help(print)!,
+let's do that now. This will give you a lot of information that may not make much sense now. Suffice to say, print can do a bit more than we 
+have revealed so far.
+
+\section{Working with Numbers}
+
+This lab isn't going to look in too much detail at the concept of variables. We will just use some commands this week and look in more
+detail at variables later.
+
+Let's enter in some more code
+
+\begin{lstlisting}
+a = 3
+b = 4
+print(a)
+print(b)
+\end{lstlisting}
+
+As you can see the interpreter now knows about two values we have given it, and remembers them and can print them. These
+variables are clearly numbers.
+
+We can do some arithmetic with these numbers.
+
+\begin{lstlisting}
+print(a+b)
+print(a-b)
+print(a*b)
+print(a/b)
+\end{lstlisting}
+
+If you didn't already know \lstinline!*! is used in almost all software languages to represent multiplication. 
+There are three other useful operators: \lstinline!**!, \lstinline!//! and \lstinline!%!. Work out what these do by trying them out.
+Use numbers rather than \lstinline!a! and \lstinline!b! if needed.
+
+Let's try and work on making our output a little but more intelligible, or at least explaining it.
+
+\begin{lstlisting}
+print("So a plus b is", a+b, "while a minus b is", a-b)
+\end{lstlisting}
+
+We can see here that \lstinline!print! is a more sophisticated animal than we've been using it as so far, it can print a list of things, allowing
+bits of text, usually called \emph{strings} and values from remembered variables, and calculations, sometimes all at once as separated by commas.
+
+\section{Mistakes}
+
+If you haven't made any mistakes in entering text yet, it's really important to get started with that. Mistakes are the only way to
+learn programming, and most other things too.
+
+Try typing:
+
+\begin{lstlisting}
+print(The value of a is, a)
+\end{lstlisting}
+
+you should get some error message something like
+
+\begin{verbatim}
+>>> print(The value of a is, a)
+  File "<stdin>", line 1
+    print(The value of a is, a)
+                  ^
+SyntaxError: invalid syntax
+\end{verbatim}
+
+Here a syntax error is indicating a mistake in your input. Can you correct it?
+
+\section{Working with Logic}
+
+An important part of software development is working with logic. Let's explore how Python does this.
+
+\begin{lstlisting}
+print(a == b)
+print(a > b)
+print(a < b)
+\end{lstlisting}
+
+You will see that Python has a concept of ``True'' and ``False''. Note also that the operator \lstinline!==! known formally as the \emph{comparison operator} tests if two things are equal, and is a different beast to the \lstinline!=! assignment operator that sets the object on the left to the value on the right and is called the \emph{assignment operator}.
+\footnote{Many tears have been shed over this, and you will probably run into this at some stage too, it is easy to use \lstinline!=! when you really meant \lstinline!==!.}
+Python also provides some useful keywords
+for interfacing with these.
+
+\begin{lstlisting}
+print(not a > b)
+\end{lstlisting}
+
+The keyword \lstinline!not! turns a \lstinline!True! into a \lstinline!False! and vice versa.
+
+Try these, and please consider carefully both the commands and the output
+
+\begin{lstlisting}
+print(a > b or a < a*b)
+print(a > b and a < a*b)
+print(a < b or a < a*b)
+print(a < b and a < a*b)
+\end{lstlisting}
+
+As you can see Python also has a keyword \lstinline!and! which combines two things to be true only if the first one \emph{and} the second one is true.
+
+Similarly the keyword \lstinline!or! combines two things to be true if either the first is true \emph{or} the second is true {or} both are true.
+
+\section{IDLE for writing scripts}
+
+Up to now we have been using IDLE as an interactive way to talk to the Python interpreter, but clearly we often want to type in commands
+and have these remembered. We can do this by creating scripts - files that contain a list of commands to be executed.
+
+
+So, go to the IDLE menu, and select \lstinline!New!. An empty window will appear. You will now likely have two windows open, one of these contains the Python interpreter, you can still use this window for having ``interactive conversations'' with the Python interpreter. However, we will want to type a collection of instructions into the new window we have just created, so we can save this file, run it as a task, make changes, save it again and so on.
+
+Type the following into it:
+\alert{Start a NEW file}
+
+\begin{lstlisting}
+### Let's save a small program
+### Put your name and date here
+
+print("hello world")
+
+a=input("What is a?")
+b=input("What is b?")
+
+if(a>b):
+    print("a is bigger")
+else:
+    print("b is bigger")
+
+print("That was exciting...")
+\end{lstlisting}
+
+There are a number of spoilers here, I haven't described \lstinline!input!, why not (in your interactive window) use \lstinline!help("input")! to find out what it is.
+I also haven't explained \lstinline!if! and \lstinline!else!. Be careful to type the program as shown, the amount of indentation \emph{is vitally important} in Python.
+
+Go to the menu for this window and run the program. 
+
+Test the program \textbf{really carefully}. Is it working correctly?\footnote{Hint: No. If you think it is, keep typing more examples.} If not can you work out why? Can you even fix it? That's a tall order at this stage but we can look at it together if you can work out what the problem is.
+
+You will need to save it first. Save it to somewhere sensible, a USB stick or your network storage would be great.
+
+You will see the program runs (input and output) in the original IDLE interpreter window. This also means that after the script completes, you can explore the aftermath of the program.
+
+Look around the editor window menu a bit, and get used to it. In particular find the Python Docs section.
+
+\section{Github}
+
+Go to \url{http://education.github.com/pack} and sign up for a student account, it's free, you are going to learn version control later in the module
+and you get a lot more goodies besides.
+
+\section{Online Documentation}
+
+Go to \url{http://www.python.org} and have a look around. The most up-to-date documentation on a programming language is to be found online.
+Get used to looking around. See if you can find the ``Beginner's Guide Overview'' and read it.
+
+\section{Extra Credit}
+
+Get a memory stick for the class that you can use to save your listings into for later weeks.
+
+If you have a home PC or a laptop, download and install Python to it. It's free (as in price and freedom) for all major Operating Systems.
+Please note that this lab, and this module are using Python 3 which has a number of differences from Python 2.
+
+
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\end{document}
+
+
+

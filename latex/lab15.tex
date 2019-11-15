@@ -1,0 +1,155 @@
+%
+% Introductrory Software Development - Laboratory 15
+%
+
+% Latex 2e
+
+\pdfcompresslevel=9
+\pdfoutput=1
+
+\documentclass[12pt,oneside]{cttutorial}
+\usepackage[pdftex]{graphicx}
+\usepackage{etoolbox}
+\usepackage{hyperref}
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{url}
+\DeclareGraphicsExtensions{.pdf,.png,.mps}
+
+\hypersetup{%
+  pdfauthor={Professor Colin Turner},%
+  pdftitle={Introductory Software Development Laboratory 14},%
+  pdfkeywords={Python, Software},%
+  pdfproducer={LaTeX},%
+}
+
+\newbool{questions_only}
+\ifdefined\questionsonly
+  \setbool{questions_only}{true}
+\else
+  \setbool{questions_only}{false}
+\fi
+
+\begin{document}
+
+\modulenumber{EEE204}
+\moduletitle{Introductory Software Development}
+\modulelecturer{Professor Turner}
+\tutorialword{Laboratory}
+\tutorialnumber{14}
+\tutorialextra{}
+
+
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+ 
+\lstset{language=Python, 
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        backgroundcolor=\color[rgb]{0.95, 0.95, 0.95},
+	lineskip=-1pt
+}
+
+\newcommand{\xkcd}[2]{
+	\begin{center}
+	\includegraphics[scale = 0.5]{../../Figures/png/#1}
+	\newline
+	\url{http://xkcd.com/#2}
+	\end{center}
+	\bigskip
+}
+
+\newcommand{\alert}[1]
+{\marginpar
+  {\makebox[0 pt][l]
+    {\includegraphics[scale=0.1]{../../Figures/png/warning.png}
+  }
+  \parbox{2 cm}{{\sffamily \bfseries \tiny #1}}}}
+
+
+\renewcommand{\baselinestretch}{1.5}
+\textwidth=15cm
+% Over-full v-boxes on even pages are due to the \v{c} in author's name
+\vfuzz2pt % Don't report over-full v-boxes if over-edge is small
+
+\newcommand{\I}{j}
+
+\begin{center}
+\begin{bfseries}
+Introductory Software Development\\Laboratory 15 - Practice for Test
+\end{bfseries}
+\end{center}
+
+\section{Aims \& Objectives}
+
+The aims of this lab are:
+
+\begin{itemize}
+\item to consolidate independent programming with objects;
+\item to encourage peer learning and assessment.
+\end{itemize}
+
+\section{Test Preparation}
+
+Next week we will have another programming test in the class. This week we are going to do so practice for that.
+
+\alert{Start a NEW file}
+Proposed name: lab15\_1.py
+
+Please write a Python listing that uses classes. It should have a class that holds appropriate information for one object, that could be a book, a student, a car, a guitar, a guitar tab, anything, it should be something that interests you.
+
+\subsection{Write the Class}
+
+Write the class as above, it should contain, as a minimum an \lstinline!__init__()! function, and a \lstinline!__str__()! function. It should also contain a function called \lstinline!user_input()! function that prompts the end user, via the screen and keyboard for the important information for the class.
+
+The class should be properly documented with comment strings.
+
+\subsection{main}
+
+Write an appropriate \lstinline!main()! function that tests your class thoroughly. The function should be called in the appropriate way.
+
+\subsection{List of objects}
+
+Now, create another class, appropriately name, that contains a \emph{list} of the first classes. You may want to refer to last week's lab for this.
+
+The class should allow for \lstinline!__init__()! and \lstinline!__str__()! and have a function for adding one of the first type of classes.
+
+It should have a function called \lstinline!summary()! which produced some sort of summary data (it needn't be complex) from the list.
+
+\section{Assessment}
+
+Now, find a partner in the lab, or work in a group of 3 if there is an odd number, give your listing to your partner and vice versa.
+
+Now do some \emph{formative peer assessment}. This is formative because the marks aren't going to go anywhere, they are to help development and learning. It is peer assessment because your peer will assess you and vice versa. This should help deepen your own learning.
+
+Work out a rough grade, A to E, for each of the following for your partner's listing and give them these grades and some comments, and receive yours in return.
+
+\begin{enumerate}
+\item Functionality, does the program do what it is supposed to?
+\item Structure and Elegance, how well written is the code?
+\item Self Documentation, are all appropriate things documented well?
+\item Readability and Comments, can you follow all the code?
+\item Resilience, does the code cope well with stupid input etc.?
+\end{enumerate}
+
+Don't agonise too much over this, but too try to be realistic with each other.
+
+\section{Extra Credit}
+
+Try to make appropriate changes to your listing in response to the feedback you have received.
+\end{document}
+
+\newpage
+\section{Sample solutions}
+
+\end{document}
+
+
+
